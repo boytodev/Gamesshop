@@ -1,0 +1,27 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gaming-cyan: #0ff;
+  --gaming-blue: #0070f3;
+  --gaming-purple: #9c27b0;
+}
+
+body {
+  @apply bg-gray-900 text-white;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.btn-accent {
+  @apply bg-gaming-cyan text-black px-4 py-2 rounded font-medium hover:bg-opacity-80 transition-colors;
+}
+
+.gaming-card {
+  @apply bg-gray-800 border border-gray-700 rounded-lg p-6 shadow-lg;
+}
+
+.text-gaming-cyan {
+  color: var(--gaming-cyan);
+}
