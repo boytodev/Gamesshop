@@ -142,20 +142,52 @@ export const sendOTP = async (req, res) => {
     user.otpExpires = expire;
     await user.save();
 
-    await sentMail(
-      email,
-      otp
-    );
+    await sentMail(email, otp);
 
-    return res.json({ message: "OTP sent to email successfully" });
+    return res.status(200).json({ message: "OTP sent to email successfully" });
   } catch (err) {
     console.error(err); // เพิ่มบรรทัดนี้เพื่อตรวจสอบข้อผิดพลาด
     return res.status(500).json({ message: "Something went wrong" });
   }
 };
 
-
 //update Password
-export const passwordUpdate = async(req, res) => {
-  
-}
+export const passwordUpdate = async (req, res) => {
+  const { id } = req.user;
+  const { password, currentPassword } = req.body;
+
+  const user = await userModel.findById(id);
+
+  if (!user) {
+    return res.status(400).json({ message: "ไม่มีสิทธิ์การแก้ไข" });
+  }
+
+  const Ismatch = bcrypt.compare(password, user.password);
+
+  if (!Ismatch) {
+    return res.status(401).json({ message: "รหัสผ่านเก่าไม่ถูกต้อง" });
+  }
+
+  const hashPassword = await bcrypt.hash(currentPassword, 10);
+
+  await userModel.updateOne({ _id: id }, { password: hashPassword });
+
+  res.status(200).json("เปลี่ยนรหัสผ่านสำเร็จ");
+};
+
+//chang Password use OTP
+export const changPasswordUseOTP = async (req, res) => {
+  const {email, currentPassword} = req.body
+
+  const Ismatch = userModel.find(email)
+
+  if(!Ismatch) {
+    res.status(400).json({message: "ไม่มีสิทธิ์การแก้ไข"})
+  }
+
+  const hashPassword = await bcrypt.hash(currentPassword,10)
+
+  await userModel.updateOne({email}, {password: hashPassword})
+
+  res.status(200).json({message: "เปลี่ยนรหัสผ่านสำเร็จ"})
+};

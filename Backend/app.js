@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 
 //Import Router
 import userRouter from './Router/user.route.js'
+import productRouter from './Router/produc.routes.js'
+import cartRouter from './Router/cart.route.js'
 
 dotenv.config();
 
@@ -26,6 +28,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}))
 app.use('/api/user', userRouter)
+app.use("/api/products", productRouter);
+app.use("/api/cart", cartRouter)
 
 //PORT
 const PORT = process.env.PORT || 4000;
